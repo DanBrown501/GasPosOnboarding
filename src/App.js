@@ -39,36 +39,38 @@ export const TOKEN_STORAGE_ID = "GasPos-token";
     *
     * Make sure you await this function and check its return value!
     */
-async function signup(signupData) {
-    try {
-        let token = await GasPosApi.signup(signupData);
-        setToken(token);
-        return { success: true };
-    } catch (errors) {
-        console.error("signup failed", errors);
-        return { success: false, errors };
-    }
-}
 
-/** Handles site-wide login.
- *
- * Make sure you await this function and check its return value!
- */
-async function login(loginData) {
-    try {
-        let token = await GasPosApi.login(loginData);
-        setToken(token);
-        return { success: true };
-    } catch (errors) {
-        console.error("login failed", errors);
-        return { success: false, errors };
-    }
-}
 
 function App({ login, signup }) {
     const [infoLoaded, setInfoLoaded] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [token, setToken] = useLocalStorage(TOKEN_STORAGE_ID);
+
+    async function signup(signupData) {
+        try {
+            let token = await GasPosApi.signup(signupData);
+            setToken(token);
+            return { success: true };
+        } catch (errors) {
+            console.error("signup failed", errors);
+            return { success: false, errors };
+        }
+    }
+
+    /** Handles site-wide login.
+     *
+     * Make sure you await this function and check its return value!
+     */
+    async function login(loginData) {
+        try {
+            let token = await GasPosApi.login(loginData);
+            setToken(token);
+            return { success: true };
+        } catch (errors) {
+            console.error("login failed", errors);
+            return { success: false, errors };
+        }
+    }
 
     console.debug(
         "App",
