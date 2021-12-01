@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Router } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import useLocalStorage from "./hooks/useLocalStorage";
 import Navigation from "./routes-nav/Navigation";
 // import RoutesFunc from "./routes-nav/RoutesFunc";
@@ -11,7 +11,6 @@ import Selfie from "./components/Selfie";
 import PersonalInformation from "./components/PersonalInformation";
 import Homepage from "./homepage/Homepage";
 import LoginForm from "./auth/LoginForm";
-import ProfileForm from "./profiles/ProfileForm";
 import SignupForm from "./auth/SignupForm";
 import PrivateRoute from "./routes-nav/PrivateRoute";
 
@@ -33,6 +32,38 @@ export const TOKEN_STORAGE_ID = "GasPos-token";
  * App -> Routes
  */
 
+
+/** Handles site-wide signup.
+    *
+    * Automatically logs them in (set token) upon signup.
+    *
+    * Make sure you await this function and check its return value!
+    */
+async function signup(signupData) {
+    try {
+        let token = await GasPosApi.signup(signupData);
+        setToken(token);
+        return { success: true };
+    } catch (errors) {
+        console.error("signup failed", errors);
+        return { success: false, errors };
+    }
+}
+
+/** Handles site-wide login.
+ *
+ * Make sure you await this function and check its return value!
+ */
+async function login(loginData) {
+    try {
+        let token = await GasPosApi.login(loginData);
+        setToken(token);
+        return { success: true };
+    } catch (errors) {
+        console.error("login failed", errors);
+        return { success: false, errors };
+    }
+}
 
 function App({ login, signup }) {
     const [infoLoaded, setInfoLoaded] = useState(false);
@@ -82,37 +113,7 @@ function App({ login, signup }) {
         setToken(null);
     }
 
-    /** Handles site-wide signup.
-     *
-     * Automatically logs them in (set token) upon signup.
-     *
-     * Make sure you await this function and check its return value!
-     */
-    async function signup(signupData) {
-        try {
-            let token = await GasPosApi.signup(signupData);
-            setToken(token);
-            return { success: true };
-        } catch (errors) {
-            console.error("signup failed", errors);
-            return { success: false, errors };
-        }
-    }
-
-    /** Handles site-wide login.
-     *
-     * Make sure you await this function and check its return value!
-     */
-    async function login(loginData) {
-        try {
-            let token = await GasPosApi.login(loginData);
-            setToken(token);
-            return { success: true };
-        } catch (errors) {
-            console.error("login failed", errors);
-            return { success: false, errors };
-        }
-    }
+   
 
 
     if (!infoLoaded) return <LoadingSpinner />;
