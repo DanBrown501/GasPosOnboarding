@@ -78,6 +78,7 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="package.json" />
+    <None Include="Properties\PublishProfiles\GasPosOnBoarding - Web Deploy1.pubxml" />
     <Content Include="src\testUtils.js">
       <SubType>Code</SubType>
     </Content>
