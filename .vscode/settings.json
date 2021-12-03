@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/49afc647-9d30-4609-b5c4-fbb348918c42/resourceGroups/GasPos-OnBoarding/providers/Microsoft.Web/sites/GasPosOnBoarding",
+    "appService.deploySubpath": "."
+}
