@@ -138,54 +138,6 @@ router.delete(
   }
 );
 
-/** POST /[usename]/jobs/[jobId]  =>  { applied: jobId }
- *
- * Authorization required: login, admin or self
- **/
-
-router.post(
-  "/:username/jobs/:jobId",
-  ensureLoggedIn,
-  ensureIsAdminOrSelf,
-  async function (req, res, next) {
-    try {
-      await User.apply(req.params.username, req.params.jobId);
-      return res.json({ applied: req.params.jobId });
-    } catch (err) {
-      return next(err);
-    }
-  }
-);
-
-/** PATCH /[usename]/jobs/[jobId]  =>  { jobId, status }
- *
- * Updates status of application. Status passed in via body.
- * Authorization required: login, admin or self
- **/
-
-router.patch(
-  "/:username/jobs/:jobId",
-  ensureLoggedIn,
-  ensureIsAdminOrSelf,
-  async function (req, res, next) {
-    try {
-      const validator = jsonschema.validate(req.body, userUpdateAppSchema);
-      if (!validator.valid) {
-        const errs = validator.errors.map((e) => e.stack);
-        throw new BadRequestError(errs);
-      }
-
-      const { state } = req.body;
-      await User.updateApplication(
-        req.params.username,
-        req.params.jobId,
-        state
-      );
-      return res.json({ jobId: req.params.jobId, state });
-    } catch (err) {
-      return next(err);
-    }
-  }
 );
 
 module.exports = router;

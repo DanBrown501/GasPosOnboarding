@@ -256,44 +256,6 @@ class User {
     if (!user) throw new NotFoundError(`No user: ${username}`);
   }
 
-  /* apply for a job: adds app to applications (if both username and job_id are valid), returns nothing */
-
-  static async apply(username, job_id) {
-    try {
-      const applicationRes = await db.query(
-        `INSERT INTO applications
-             (username,
-              job_id)
-             VALUES ($1, $2)
-             RETURNING *`,
-        [username, job_id]
-      );
-    } catch {
-      throw new BadRequestError(
-        `Couldn't create application. Invalid username (${username}) or job id (${job_id}) were provided. `
-      );
-    }
-  }
-
-  /* update status of application: adds app to applications (if both username and job_id are valid), returns nothing */
-
-  static async updateApplication(username, job_id, status) {
-    const appRes = await db.query(
-      `SELECT * FROM applications WHERE username=$1 AND job_id=$2`,
-      [username, job_id]
-    );
-
-    if (!appRes.rows[0]) {
-      throw new NotFoundError(
-        `Couldn't find application for user with username: ${username} and job with id: ${job_id}`
-      );
-    }
-    await db.query(
-      `UPDATE applications SET state=$3
-      WHERE username=$1 AND job_id=$2`,
-      [username, job_id, status]
-    );
-  }
 }
 
 module.exports = User;
